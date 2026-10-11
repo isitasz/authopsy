@@ -1,13 +1,9 @@
 # `log-analyzer`
 
-<p align="center">
-  <samp>parsing logs, finding patterns.</samp>
-</p>
-
 a small python project exploring linux authentication logs through data processing and security analysis.
 
 ```text
-log-analysis/
+log-analyzer/
 ├── data/       # sample authentication logs
 ├── src/        # log processing
 └── tests/      # automated tests
@@ -18,6 +14,8 @@ log-analysis/
 - parse authentication log entries
 - identify failed login attempts
 - aggregate events by source IP
+- handle malformed log entries
+- extract structured fields from log entries
 
 ### `> stack`
 
@@ -25,10 +23,6 @@ log-analysis/
 
 ### `> roadmap`
 
-- [X] identify failed authentication attempts
-- [X] divide failed attempts by source IP
-- [X] handle malformed log entries
-- [X] extract structured fields from log entries
 - [ ] detect suspicious login patterns
 - [ ] add configurable detection thresholds
 - [ ] add automated tests
