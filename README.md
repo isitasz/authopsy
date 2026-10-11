@@ -1,4 +1,4 @@
-# `log-analysis`
+# `log-analyzer`
 
 <p align="center">
   <samp>parsing logs, finding patterns.</samp>
@@ -27,8 +27,8 @@ log-analysis/
 
 - [X] identify failed authentication attempts
 - [X] divide failed attempts by source IP
-- [ ] handle malformed log entries
-- [ ] extract structured fields from log entries
+- [X] handle malformed log entries
+- [X] extract structured fields from log entries
 - [ ] detect suspicious login patterns
 - [ ] add configurable detection thresholds
 - [ ] add automated tests
