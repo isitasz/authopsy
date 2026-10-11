@@ -1,5 +1,6 @@
 
 import ipaddress
+import re
 from pathlib import Path
 
 
@@ -13,37 +14,26 @@ def main():
             if "Failed password" not in line:
                 continue
 
-            parts = line.split(" from ", 1)
 
-            if len(parts) < 2:
-                continue
+            parts = line.split()
+            timestamp = " ".join(parts[:3]) if len(parts) >= 3 else None
+
+            match = re.search(r"Failed password for (?:invalid user )?(\w+) from (\d+\.\d+\.\d+\.\d+)", line)
+            user = match.group(1) if match else None
 
             try:
-                ip = parts[1].split()[0]
+                ip = match.group(2) if match else None
                 ipaddress.ip_address(ip)
             except ValueError:
                 continue
 
-            if "invalid user" in line:
-                parts = line.split(" user ", 1)
-                user = parts[1].split()[0]
-                print(f"{user}")
-            else:
-                parts = line.split(" for ", 1)
-                user = parts[1].split()[0]
-                print(f"{user}")
+            match = re.search(r"from \d+\.\d+\.\d+\.\d+ port (\d+)", line)
+            port = int(match.group(1)) if match else None
 
-            timestamp = " ".join(line.split()[:3])
-
-            parts = line.split(" port ", 1)
-            port = int(parts[1].split()[0])
-
-            hostname = line.split()[3]
-
-            process = line.split()[4].split("[")[0]
-
-            parts = line.split("[", 1)
-            pid = int(parts[1].split("]")[0])
+            match = re.search(r"(\w+) (\w+)\[(\d+)\]", line)
+            hostname = match.group(1) if match else None
+            process = match.group(2) if match else None
+            pid = int(match.group(3)) if match else None
 
             event = {
                 "timestamp": timestamp,
@@ -51,12 +41,11 @@ def main():
                 "ip": ip,
                 "port": port,
                 "hostname": hostname,
-                "pid": pid,
-                "process": process
+                "process": process,
+                "pid": pid
             }
 
             events.append(event)
-            
 
             if ip not in attempts_by_ip:
                 attempts_by_ip[ip] = 0
@@ -66,7 +55,8 @@ def main():
     for ip, attempts in attempts_by_ip.items():
         print(f"{ip}: {attempts} failed attempts")
 
-    print(events)
+    for event in events:
+        print(event)
         
 
 
