@@ -8,6 +8,7 @@ def main():
     log_path = Path("data/auth.log")
     attempts_by_ip = {}
     events=[]
+    users_by_ip = {}
 
     with log_path.open("r", encoding="utf-8") as log_file:
         for line in log_file:
@@ -49,14 +50,30 @@ def main():
 
             if ip not in attempts_by_ip:
                 attempts_by_ip[ip] = 0
-
+            
             attempts_by_ip[ip] += 1
+    
+
+    for event in events:
+        ip = event["ip"]
+        user = event["username"]
+
+        if ip not in users_by_ip:
+            users_by_ip[ip] = set();
+
+        users_by_ip[ip].add(user)
+
+    for ip, users in users_by_ip.items():
+        if len(users) >= 3:
+            print(f"{ip} has failed login attempts for multiple users: {', '.join(users)}")
+
 
     for ip, attempts in attempts_by_ip.items():
         print(f"{ip}: {attempts} failed attempts")
+        if attempts >= 5:
+            print(f"{ip} is potentially involved in a brute force attack!")
 
-    for event in events:
-        print(event)
+
         
 
 

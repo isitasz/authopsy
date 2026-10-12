@@ -16,6 +16,7 @@ log-analyzer/
 - aggregate events by source IP
 - handle malformed log entries
 - extract structured fields from log entries
+- detect suspicious login patterns
 
 ### `> stack`
 
@@ -23,7 +24,6 @@ log-analyzer/
 
 ### `> roadmap`
 
-- [ ] detect suspicious login patterns
 - [ ] add configurable detection thresholds
 - [ ] add automated tests
 - [ ] refactor log parsing into reusable functions
