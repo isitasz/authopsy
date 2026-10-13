@@ -3,7 +3,7 @@
 a simple tool exploring Linux authentication logs through data processing and security analysis, identifying failed login attempts, detecting suspicious activity, and uncovering patterns in authentication events.
 
 ```text
-log-analyzer/
+authopsy/
 ├── data/       # sample authentication logs
 ├── src/        # log processing
 └── tests/      # automated tests
