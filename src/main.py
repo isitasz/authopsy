@@ -8,20 +8,44 @@ def parse_log_line(line):
     if "Failed password" not in line:
         return None, None
 
-    parts = line.split()
-    timestamp = " ".join(parts[:3]) if len(parts) >= 3 else None
+    match = re.match(r"^([A-Z][a-z]{2} \d{1,2} \d{2}:\d{2}:\d{2}) ",line)
+    timestamp = match.group(1) if match else None
 
-    match = re.search(r"Failed password for (?:invalid user )?(\w+) from (\S+)", line)
+    match = re.search("Failed password for (?:invalid user )?(?!from\b)(\w+)(?: from (\S+))?", line)
     user = match.group(1) if match else None
     ip = match.group(2) if match else None
+
+    if re.search(r"Failed password for (?:invalid user )?from\b", line):
+        return None, "missing_user"
 
     match = re.search(r"from \S+ port (\d+)", line)
     port = int(match.group(1)) if match else None
 
-    match = re.search(r"(\w+) (\w+)\[(\d+)\]", line)
-    hostname = match.group(1) if match else None
-    process = match.group(2) if match else None
-    pid = int(match.group(3)) if match else None
+    timestamp_match = re.match(r"^[A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+",line)
+
+    hostname = None
+    process = None
+    pid = None
+
+    if timestamp_match:
+        remaining = line[timestamp_match.end():].split()
+
+        if remaining and re.fullmatch(r"\w+\[\d+\]:", remaining[0]):
+            return None, "missing_hostname"
+
+        if len(remaining) >= 2:
+            hostname = remaining[0]
+            process_info = remaining[1]
+
+            process_match = re.fullmatch(r"(\w+)(?:\[(\d+)\])?:",process_info)
+
+            if process_match:
+                process = process_match.group(1)
+                pid = (
+                    int(process_match.group(2))
+                    if process_match.group(2)
+                    else None
+                )
 
     fields = {
         "timestamp": timestamp,

@@ -17,6 +17,7 @@ authopsy/
 - handle malformed log entries
 - extract structured fields from log entries
 - detect suspicious login patterns
+- run automated tests
 
 ### `> stack`
 
@@ -25,7 +26,6 @@ authopsy/
 ### `> roadmap`
 
 - [ ] add configurable detection thresholds
-- [ ] add automated tests
 - [ ] refactor log parsing into reusable functions
 - [ ] store structured events in PostgreSQL
 - [ ] design a relational schema for authentication events
