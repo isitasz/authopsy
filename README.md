@@ -1,6 +1,6 @@
-# `log-analyzer`
+# `authopsy`
 
-a small python project exploring linux authentication logs through data processing and security analysis.
+a small python tool exploring linux authentication logs through data processing and security analysis.
 
 ```text
 log-analyzer/
