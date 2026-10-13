@@ -1,6 +1,6 @@
 # `authopsy`
 
-a small python tool exploring linux authentication logs through data processing and security analysis.
+a simple tool exploring Linux authentication logs through data processing and security analysis, identifying failed login attempts, detecting suspicious activity, and uncovering patterns in authentication events.
 
 ```text
 log-analyzer/
