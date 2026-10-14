@@ -11,13 +11,12 @@ authopsy/
 
 ### `> current capabilities`
 
-- parse authentication log entries
-- identify failed login attempts
-- aggregate events by source IP
-- handle malformed log entries
-- extract structured fields from log entries
-- detect suspicious login patterns
-- run automated tests
+- parse authentication logs and extract structured fields
+- identify and aggregate failed login attempts by source IP
+- detect suspicious login patterns, including multiple usernames per IP and high login failure counts
+- validate log entries and report malformed records
+- configure detection thresholds through command-line arguments
+- run automated tests for log parsing
 
 ### `> stack`
 
@@ -25,8 +24,10 @@ authopsy/
 
 ### `> roadmap`
 
-- [ ] add configurable detection thresholds
-- [ ] refactor log parsing into reusable functions
+- [X] refactor log parsing into reusable functions
+- [X] handle malformed log entries
+- [X] add configurable detection thresholds
+- [X] add automated tests for log parsing
 - [ ] store structured events in PostgreSQL
 - [ ] design a relational schema for authentication events
 - [ ] automate log ingestion
