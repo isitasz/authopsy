@@ -1,7 +1,18 @@
 
 import ipaddress
+import argparse
 import re
 from pathlib import Path
+
+
+def positive_int(value):
+    try:
+        threshold = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("must be a positive integer") from error
+    if threshold < 1:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return threshold
 
 def parse_log_line(line):
 
@@ -79,7 +90,22 @@ def parse_log_line(line):
     return fields, None
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Analyze failed authentication attempts.")
+    parser.add_argument(
+        "--brute-force-threshold",
+        type=positive_int,
+        default=5,
+        help="failed attempts from one IP that trigger a brute-force warning (default: 5)",
+    )
+    parser.add_argument(
+        "--multiple-user-threshold",
+        type=positive_int,
+        default=3,
+        help="distinct usernames from one IP that trigger a warning (default: 3)",
+    )
+    args = parser.parse_args(argv)
+
     log_path = Path("data/auth.log")
     events=[]
     users_by_ip = {}
@@ -120,12 +146,12 @@ def main():
         users_by_ip[ip].add(user)
 
     for ip, users in users_by_ip.items():
-        if len(users) >= 3:
+        if len(users) >= args.multiple_user_threshold:
             print(f"{ip} has failed login attempts for multiple users: {', '.join(users)}")
 
     for ip, attempts in attempts_by_ip.items():
         print(f"{ip}: {attempts} failed attempts")
-        if attempts >= 5:
+        if attempts >= args.brute_force_threshold:
             print(f"{ip} is potentially involved in a brute force attack!")
 
     print("\nMalformed entries:")
